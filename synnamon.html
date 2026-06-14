@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Happy Birthday Miss Mano</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#0d0720;--plum:#3a1040;--gold:#d4a574;--goldB:#f0c896;--goldD:#9a6830;
+  --rose:#e8b4cb;--blush:#f4d4e0;--cream:#fef5e6;--ivory:#fffaf0;
+}
+html,body{min-height:100vh;overflow-x:hidden}
+body{
+  font-family:'Inter',sans-serif;color:var(--cream);
+  background:radial-gradient(ellipse at 30% 0%,#3d1248 0%,#1a0d30 50%,#0d0720 100%);
+  min-height:100vh;
+}
+
+/* ── FIXED MUSIC BTN ── */
+#musicBtn{
+  position:fixed;top:14px;right:14px;z-index:9999;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);
+  background:rgba(13,7,32,.8);backdrop-filter:blur(8px);
+  color:var(--goldB);font-size:18px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;transition:all .3s;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+#musicBtn:hover{background:rgba(212,165,116,.15)}
+
+/* ── CANVASES ── */
+canvas{position:fixed;inset:0;pointer-events:none;z-index:80}
+#fwCanvas{z-index:85}
+
+/* ── AMBIENT STARS ── */
+#bgStars{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bstar{position:absolute;background:var(--cream);border-radius:50%;animation:tw var(--d) ease-in-out infinite var(--dl)}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.4)}50%{opacity:.9;transform:scale(1.4)}}
+
+/* ── PETALS ── */
+#bgPetals{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.petal{position:absolute;top:-20px;border-radius:50% 0;opacity:.7;animation:pfall var(--d) linear var(--dl) infinite}
+@keyframes pfall{0%{transform:translateY(0) rotate(0);opacity:.7}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* ── LANTERNS ── */
+#bgLanterns{position:fixed;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+.lant{
+  position:absolute;bottom:-60px;
+  width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #fff8d0 0%, #ffd750 40%, #d4a574 80%);
+  box-shadow:0 0 14px 6px rgba(212,165,116,.5), 0 0 28px 10px rgba(255,215,80,.2);
+  animation:lrise var(--d) linear var(--dl) infinite;opacity:0;
+}
+.lant::before{content:'';position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:1px;height:14px;background:linear-gradient(180deg,transparent,rgba(212,165,116,.5))}
+@keyframes lrise{0%{opacity:0;transform:translateY(0) translateX(0)}10%{opacity:.9}90%{opacity:.5}100%{opacity:0;transform:translateY(-110vh) translateX(20px)}}
+
+/* ── SPARKLE ── */
+.sparkle{position:fixed;pointer-events:none;z-index:9990;font-size:14px;animation:spk .7s ease-out forwards}
+@keyframes spk{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0) translateY(-18px)}}
+
+/* ══════════ PHASES ══════════ */
+.phase{display:none;position:fixed;inset:0;z-index:100;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.phase.on{display:flex}
+
+/* ── LOADING ── */
+#pLoad{background:var(--ink)}
+.load-star{font-size:52px;animation:lspin 3s linear infinite}
+@keyframes lspin{to{transform:rotate(360deg)}}
+.load-bar{width:220px;height:2px;background:rgba(212,165,116,.2);border-radius:2px;margin-top:28px;overflow:hidden}
+.load-prog{height:100%;width:0;background:linear-gradient(90deg,var(--goldD),var(--goldB));border-radius:2px;transition:width .05s}
+.load-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);margin-top:18px;opacity:.8}
+
+/* ── ENVELOPE ── */
+#pEnv{}
+.env-wrap{perspective:900px;cursor:pointer;margin-bottom:28px;user-select:none}
+.env-box{
+  position:relative;width:300px;height:195px;
+  background:linear-gradient(135deg,#f8daea,#e8c0d8);
+  border-radius:8px;
+  box-shadow:0 40px 80px rgba(0,0,0,.55),0 0 0 1px var(--gold),0 0 0 10px rgba(212,165,116,.1);
+  animation:envfloat 3.5s ease-in-out infinite;
+}
+@keyframes envfloat{0%,100%{transform:translateY(0) rotateY(-4deg)}50%{transform:translateY(-10px) rotateY(4deg)}}
+.env-to{position:absolute;top:12px;left:0;right:0;text-align:center}
+.env-to-lbl{font-size:9px;letter-spacing:.4em;color:#9a6830;text-transform:uppercase}
+.env-to-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:16px;color:#5a2a52;margin-top:2px}
+.env-flap{
+  position:absolute;top:0;left:0;right:0;height:0;
+  border-left:150px solid transparent;border-right:150px solid transparent;
+  border-top:110px solid #d4a0c0;
+}
+.env-seal{
+  position:absolute;top:65px;left:50%;transform:translateX(-50%);
+  width:54px;height:54px;border-radius:50%;
+  background:radial-gradient(circle at 33% 33%,#e0b870,#9a6830 60%,#5a3810);
+  box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 2px #7a4820 inset;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Pinyon Script',cursive;color:var(--ivory);font-size:26px;
+}
+.env-from{position:absolute;bottom:12px;left:0;right:0;text-align:center}
+.env-from-lbl{font-size:9px;letter-spacing:.4em;color:#9a6830;text-transform:uppercase}
+.env-from-name{font-family:'Pinyon Script',cursive;font-size:22px;color:#5a2a52;margin-top:2px;line-height:1}
+.env-hbd{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:var(--blush);margin-bottom:8px}
+.env-sub{font-family:'Pinyon Script',cursive;font-size:32px;color:var(--goldB);text-shadow:0 0 20px rgba(212,165,116,.3)}
+.env-tap{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--goldB);margin-top:28px;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── COUNTDOWN ── */
+#pCount{}
+.cnt-num{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:220px;line-height:1;font-weight:400;
+  background:linear-gradient(180deg,var(--goldB) 0%,var(--gold) 55%,var(--goldD) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 50px rgba(212,165,116,.5));
+  animation:cntpop .95s ease-out forwards;
+}
+@keyframes cntpop{
+  0%{transform:scale(.05) rotate(-30deg);opacity:0;filter:blur(40px)}
+  50%{transform:scale(1.15) rotate(5deg);opacity:1;filter:blur(0)}
+  100%{transform:scale(1);opacity:0}
+}
+.cnt-ring{position:absolute;border:2px solid rgba(212,165,116,.6);border-radius:50%;animation:cring 1s ease-out forwards;opacity:0}
+@keyframes cring{0%{width:50px;height:50px;opacity:.9}100%{width:550px;height:550px;opacity:0}}
+
+/* ── REVEAL ── */
+#pReveal{}
+.rev-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rev-e{font-size:10px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);opacity:0;animation:fadeup .8s .4s forwards}
+.rev-hbd{font-family:'Pinyon Script',cursive;font-size:68px;color:var(--blush);text-shadow:0 0 40px rgba(232,180,203,.5);opacity:0;animation:fadeup 1s .8s forwards;line-height:1}
+.rev-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:76px;line-height:1;background:linear-gradient(180deg,var(--goldB),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 30px rgba(212,165,116,.5));opacity:0;animation:fadeup 1.2s 1.3s forwards;margin-top:-4px}
+.rev-from{font-family:'Pinyon Script',cursive;font-size:28px;color:var(--goldB);opacity:0;animation:fadeup .8s 2.2s forwards}
+.rev-div{display:flex;align-items:center;gap:16px;margin:14px 0;opacity:0;animation:fadeup .8s 2s forwards}
+.rev-div .rl{width:55px;height:1px;background:linear-gradient(90deg,transparent,var(--goldD),transparent)}
+.rev-div .ro{color:var(--goldD);font-size:18px}
+.rev-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.6;max-width:320px;color:var(--cream);opacity:0;animation:fadeup 1s 2.5s forwards}
+.rev-btn{
+  margin-top:36px;padding:14px 36px;border:1px solid var(--gold);
+  color:var(--goldB);background:rgba(212,165,116,.06);
+  font-size:10px;letter-spacing:.4em;text-transform:uppercase;
+  cursor:pointer;border-radius:2px;font-family:'Inter',sans-serif;
+  transition:all .3s;
+  opacity:0;animation:fadeup 1s 3.2s forwards;
+}
+.rev-btn:active{background:rgba(212,165,116,.2)}
+@keyframes fadeup{from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ══════════ MAIN PAGE ══════════ */
+#pMain{display:none;position:relative;inset:auto;min-height:100vh}
+#pMain.on{display:block}
+.main-wrap{max-width:540px;margin:0 auto;padding:0 18px 100px}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0}
+.h-eye{font-size:10px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);opacity:.9}
+.h-hbd{font-family:'Pinyon Script',cursive;font-size:60px;color:var(--blush);margin-top:10px;text-shadow:0 0 28px rgba(232,180,203,.35);line-height:1}
+.h-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:72px;line-height:1;background:linear-gradient(180deg,var(--goldB) 0%,var(--gold) 60%,var(--goldD) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(212,165,116,.45))}
+.h-divl{display:flex;align-items:center;justify-content:center;gap:14px;margin:24px 0}
+.h-divl .rl{width:48px;height:1px;background:linear-gradient(90deg,transparent,var(--goldD),transparent)}
+.h-divl .ro{color:var(--goldD);font-size:15px}
+.h-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.65;max-width:340px;color:var(--cream);opacity:.9}
+.h-from{font-family:'Pinyon Script',cursive;font-size:30px;color:var(--goldB);margin-top:18px;text-shadow:0 0 16px rgba(212,165,116,.3)}
+.h-badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.badge{padding:7px 15px;border:1px solid rgba(212,165,116,.3);border-radius:20px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);background:rgba(212,165,116,.05)}
+.h-scroll{margin-top:44px;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.5;animation:scrl 2.5s ease-in-out infinite}
+@keyframes scrl{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(7px);opacity:.8}}
+.h-scroll span{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.arr{font-size:18px;color:var(--goldD)}
+
+/* SECTION DIVIDER */
+.sdiv{display:flex;align-items:center;justify-content:center;gap:14px;margin:60px 0 28px}
+.sdiv .rl{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--goldD),transparent)}
+.sdiv .lbl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;white-space:nowrap}
+
+/* CAKE */
+.cake-area{text-align:center;padding:20px 0}
+.cake-stage{display:flex;justify-content:center;padding:50px 0 20px;position:relative}
+.cake-wrap{position:relative;width:300px;height:320px}
+.cake-glow{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:260px;height:60px;border-radius:50%;background:radial-gradient(ellipse,rgba(232,180,203,.4) 0%,transparent 70%);filter:blur(14px);opacity:0;transition:opacity 1.5s;pointer-events:none}
+/* plate */
+.cplate{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:280px;height:18px;border-radius:50%;background:linear-gradient(180deg,var(--goldB),var(--goldD));box-shadow:0 8px 24px rgba(0,0,0,.4)}
+/* layers */
+.cl{position:absolute;left:50%;transform:translateX(-50%);border-radius:8px 8px 5px 5px}
+.cl1{bottom:14px;width:250px;height:68px;background:linear-gradient(180deg,#8a3d70,#5a1e45);box-shadow:inset 0 5px 14px rgba(0,0,0,.25),0 5px 10px rgba(0,0,0,.3)}
+.cl2{bottom:78px;width:196px;height:56px;background:linear-gradient(180deg,#b05880,#832050);box-shadow:inset 0 4px 12px rgba(0,0,0,.2),0 4px 8px rgba(0,0,0,.3)}
+.cl3{bottom:130px;width:142px;height:48px;background:linear-gradient(180deg,#d07898,#a04070);box-shadow:inset 0 4px 10px rgba(0,0,0,.2),0 4px 8px rgba(0,0,0,.3)}
+/* frosting */
+.cf{position:absolute;left:50%;transform:translateX(-50%);height:13px;background:linear-gradient(180deg,var(--ivory),var(--blush))}
+.cf1{bottom:78px;width:250px;border-radius:0 0 40% 40%;clip-path:polygon(0 0,100% 0,100% 30%,94% 88%,86% 52%,78% 98%,70% 62%,62% 96%,54% 58%,46% 98%,38% 62%,30% 92%,22% 52%,14% 88%,6% 48%,0 30%)}
+.cf2{bottom:130px;width:196px;clip-path:polygon(0 0,100% 0,100% 38%,92% 94%,83% 58%,74% 98%,65% 68%,56% 98%,47% 62%,38% 92%,29% 58%,20% 94%,11% 52%,4% 78%,0 42%)}
+.cf3{bottom:174px;width:142px;clip-path:polygon(0 0,100% 0,100% 38%,90% 98%,79% 58%,67% 98%,55% 62%,43% 98%,31% 58%,20% 94%,9% 52%,0 38%)}
+/* cake dots */
+.cdots{position:absolute;left:50%;transform:translateX(-50%);display:flex;justify-content:space-around}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--goldB);box-shadow:0 0 8px rgba(212,165,116,.5)}
+/* candles */
+.candles-wrap{position:absolute;left:50%;transform:translateX(-50%);bottom:176px;width:136px;display:flex;justify-content:space-between;padding:0 10px;align-items:flex-end}
+.candle{position:relative;width:10px;height:40px;border-radius:3px;background:linear-gradient(90deg,var(--rose),var(--blush) 50%,var(--rose));box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;transition:transform .15s}
+.candle:active{transform:scale(.88)}
+.candle::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:2px;height:4px;background:#3a1917;border-radius:1px}
+.flame{position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:10px;height:20px;background:radial-gradient(ellipse at 50% 85%,#fff9c4,#ffd750 30%,#ff9000 65%,transparent 100%);border-radius:50% 50% 35% 35% / 60% 60% 40% 40%;filter:blur(.4px);box-shadow:0 0 16px #ffd750,0 0 30px rgba(255,144,0,.4);animation:flm .28s ease-in-out infinite alternate;pointer-events:none;transition:all .4s}
+@keyframes flm{from{transform:translateX(-50%) scaleY(1) skewX(-3deg)}to{transform:translateX(-50%) scaleY(1.13) skewX(3deg)}}
+.candle.out .flame{opacity:0;height:0;top:0}
+.candle.out::after{content:'';position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:3px;height:12px;background:linear-gradient(180deg,rgba(200,200,220,.5),transparent);border-radius:50%;animation:smoke 2s ease-out forwards}
+@keyframes smoke{0%{opacity:.6}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
+.cake-hint{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);opacity:.85;letter-spacing:.05em;margin-top:8px}
+.cake-wish{margin:20px auto 0;max-width:360px;padding:26px 22px;text-align:center;background:linear-gradient(180deg,rgba(232,180,203,.07),rgba(212,165,116,.04));border:1px solid rgba(212,165,116,.28);border-radius:4px;position:relative;opacity:0;transform:translateY(18px);transition:all .9s}
+.cake-wish.show{opacity:1;transform:translateY(0)}
+.cake-wish .cwl{font-size:10px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+.cake-wish .cwt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.65;color:var(--cream)}
+
+/* REASONS CAROUSEL */
+.reasons-outer{overflow:hidden;margin:0 -18px;position:relative}
+.reasons-track{display:flex;gap:14px;padding:8px 18px 18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.reasons-track::-webkit-scrollbar{display:none}
+.rcard{flex:0 0 255px;scroll-snap-align:center;padding:28px 20px;background:linear-gradient(135deg,rgba(58,16,64,.7),rgba(26,13,48,.8));border:1px solid rgba(212,165,116,.22);border-radius:6px;position:relative;backdrop-filter:blur(6px);transition:border-color .3s}
+.rcard:active{transform:scale(.97)}
+.rcard::before{content:'';position:absolute;inset:5px;border:1px solid rgba(212,165,116,.1);border-radius:3px;pointer-events:none}
+.ricon{font-size:34px;margin-bottom:14px}
+.rnum{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--goldD);letter-spacing:.3em;margin-bottom:6px}
+.rtitle{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:19px;color:var(--goldB);margin-bottom:8px;line-height:1.2}
+.rbody{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;line-height:1.6;color:var(--cream);opacity:.9}
+.rdots{display:flex;justify-content:center;gap:7px;margin-top:14px}
+.rdot{width:6px;height:6px;border-radius:50%;background:rgba(212,165,116,.25);transition:all .3s}
+.rdot.on{background:var(--gold);width:18px;border-radius:3px}
+.swipehint{text-align:center;font-size:10px;letter-spacing:.28em;color:var(--goldD);text-transform:uppercase;margin-top:10px;opacity:.7}
+
+/* GIFTS */
+.gifts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:370px;margin:0 auto}
+.gbox{aspect-ratio:1;border-radius:6px;cursor:pointer;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(58,16,64,.8),rgba(90,32,96,.6));border:1px solid rgba(212,165,116,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:transform .3s,border-color .3s,box-shadow .3s}
+.gbox:active{transform:scale(.93)}
+.gbox:not(.opened):hover{border-color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 18px rgba(212,165,116,.2)}
+.gbox.opened{opacity:.4;pointer-events:none}
+.gbox .gribbon{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--goldD),var(--goldB),var(--goldD))}
+.gbox .gnum{position:absolute;top:5px;left:7px;font-size:8px;color:var(--goldD);letter-spacing:.2em}
+.gbox .gicon{font-size:30px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.gbox .glbl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--gold);opacity:.85}
+.gifts-sub{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--cream);opacity:.75;margin-bottom:20px;line-height:1.6;padding:0 14px}
+
+/* BALLOONS */
+.balloon-sec{position:relative;min-height:360px;overflow:hidden;border-radius:10px;background:linear-gradient(180deg,rgba(13,7,32,.35),rgba(58,16,64,.45));border:1px solid rgba(212,165,116,.1)}
+.balloon-hdr{text-align:center;padding:22px 16px 12px}
+.balloon-hdr .bh1{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--goldB)}
+.balloon-hdr .bh2{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--gold);opacity:.75;margin-top:6px}
+.balloon-field{position:relative;height:280px;overflow:hidden}
+.balloon{position:absolute;cursor:pointer;width:50px;height:62px;border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;box-shadow:inset -7px -8px 12px rgba(0,0,0,.2),inset 5px 5px 10px rgba(255,255,255,.2);animation:bfl var(--bd) ease-in-out var(--bdl) infinite;transition:transform .15s}
+.balloon:active{transform:scale(.8)!important}
+.balloon::before{content:'';position:absolute;bottom:-42px;left:50%;width:1px;height:42px;background:rgba(212,165,116,.35);transform:translateX(-50%)}
+.balloon::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid currentColor}
+@keyframes bfl{0%{transform:translateY(0) translateX(0)}25%{transform:translateY(-35px) translateX(14px)}50%{transform:translateY(-70px) translateX(-10px)}75%{transform:translateY(-35px) translateX(18px)}100%{transform:translateY(0)}}
+.bpop{position:fixed;pointer-events:none;z-index:9000;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--goldB);text-shadow:0 0 14px rgba(212,165,116,.6);white-space:nowrap;animation:bpmsg 2.2s ease-out forwards}
+@keyframes bpmsg{0%{opacity:0;transform:scale(.4) translateY(0)}18%{opacity:1;transform:scale(1.1) translateY(-14px)}100%{opacity:0;transform:scale(1) translateY(-52px)}}
+
+/* SHAYARI */
+.shayari-list{display:flex;flex-direction:column;gap:18px}
+.shcard{padding:30px 24px;border:1px solid rgba(212,165,116,.2);border-radius:6px;background:linear-gradient(135deg,rgba(58,16,64,.5),rgba(26,13,48,.6));position:relative;text-align:center;backdrop-filter:blur(5px)}
+.shcard::before,.shcard::after{content:'❧';color:var(--goldD);font-size:17px;position:absolute;opacity:.8}
+.shcard::before{top:9px;left:13px}
+.shcard::after{bottom:9px;right:13px;transform:scaleX(-1)}
+.shlang{font-size:9px;letter-spacing:.4em;color:var(--goldD);text-transform:uppercase;margin-bottom:10px}
+.shtext{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;line-height:1.72;color:var(--cream);margin-bottom:8px}
+.shattr{font-size:12px;color:var(--gold);opacity:.7;letter-spacing:.08em}
+
+/* STARS WISHING */
+.stars-sec{text-align:center;padding:12px 0}
+.stars-intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--cream);opacity:.8;max-width:310px;margin:0 auto;line-height:1.6}
+.stars-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:22px;margin-top:26px;padding:16px}
+.wstar{width:68px;height:68px;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;animation:stpulse var(--sp) ease-in-out infinite var(--sdl);filter:drop-shadow(0 0 8px rgba(212,165,116,.4));transition:transform .2s}
+.wstar:active{transform:scale(.78)}
+.wstar.wished{opacity:.35;cursor:default;animation:none;filter:none}
+@keyframes stpulse{0%,100%{transform:scale(1) rotate(0);filter:drop-shadow(0 0 6px rgba(212,165,116,.3))}50%{transform:scale(1.22) rotate(12deg);filter:drop-shadow(0 0 22px rgba(212,165,116,.9))}}
+.wish-box{margin-top:20px;padding:20px 18px;border:1px solid rgba(212,165,116,.22);border-radius:4px;background:rgba(212,165,116,.04);min-height:76px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.6;color:var(--cream);transition:opacity .4s;text-align:center}
+.wish-box.empty{font-size:14px;color:var(--goldD);opacity:.7}
+
+/* DUAS */
+.dua-card{max-width:400px;margin:0 auto;padding:34px 26px;text-align:center;background:linear-gradient(180deg,rgba(58,16,64,.5),rgba(26,13,48,.6));border:1px solid rgba(212,165,116,.23);border-radius:6px;position:relative}
+.dua-orn{font-size:22px;letter-spacing:.55em;color:var(--goldD);margin-bottom:12px;padding-left:.55em}
+.dua-lbl{font-size:10px;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}
+.dua-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;line-height:1.72;color:var(--cream);min-height:96px;display:flex;align-items:center;justify-content:center;transition:opacity .38s}
+.dua-txt.fade{opacity:0}
+.dua-row{margin-top:26px;display:flex;justify-content:center;gap:12px}
+.dua-btn{padding:12px 24px;border:1px solid var(--goldD);color:var(--goldB);background:transparent;font-size:10px;letter-spacing:.35em;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Inter',sans-serif;transition:all .3s}
+.dua-btn:active{background:rgba(212,165,116,.15)}
+.dua-cnt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--goldD);margin-top:16px;opacity:.7}
+
+/* LETTER */
+.letter{max-width:430px;margin:0 auto;padding:38px 28px;text-align:center;background:linear-gradient(180deg,rgba(58,16,64,.45),rgba(26,13,48,.55));border:1px solid rgba(212,165,116,.2);border-radius:6px;position:relative}
+.letter::before{content:'';position:absolute;inset:8px;border:1px solid rgba(212,165,116,.12);pointer-events:none;border-radius:3px}
+.ltop{font-size:9px;letter-spacing:.52em;color:var(--goldD);text-transform:uppercase;margin-bottom:16px}
+.lscript{font-family:'Pinyon Script',cursive;font-size:46px;color:var(--blush);margin-bottom:20px;line-height:1}
+.lbody{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.78;color:var(--cream);text-align:left}
+.lsign{margin-top:26px;font-family:'Pinyon Script',cursive;font-size:38px;color:var(--goldB)}
+.lseal{margin:18px auto 0;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 33% 33%,var(--goldB),var(--goldD) 65%,#5a3810);display:flex;align-items:center;justify-content:center;font-family:'Pinyon Script',cursive;color:var(--ivory);font-size:22px;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+
+/* FINALE */
+.finale{text-align:center;padding:40px 0 60px}
+.fin-script{font-family:'Pinyon Script',cursive;font-size:56px;color:var(--blush);margin-bottom:12px;text-shadow:0 0 24px rgba(232,180,203,.3)}
+.fin-from{font-family:'Pinyon Script',cursive;font-size:26px;color:var(--goldB);margin-bottom:20px}
+.fin-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;line-height:1.7;color:var(--cream);opacity:.9;max-width:340px;margin:0 auto 36px}
+.fin-btn{padding:17px 44px;border:1px solid var(--gold);color:var(--goldB);background:rgba(212,165,116,.06);font-size:11px;letter-spacing:.4em;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Inter',sans-serif;font-weight:300;box-shadow:0 0 40px rgba(212,165,116,.12);transition:all .3s}
+.fin-btn:active{background:rgba(212,165,116,.2)}
+.fin-orn{margin-top:32px;color:var(--goldD);font-size:13px;letter-spacing:.8em;padding-left:.8em;opacity:.6}
+
+/* PAGE FOOTER */
+.pg-footer{text-align:center;padding:50px 0 70px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--goldD);opacity:.55;letter-spacing:.15em}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(7,3,16,.9);backdrop-filter:blur(10px);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal-card{width:100%;max-width:390px;padding:38px 26px;text-align:center;background:linear-gradient(180deg,#2d1040,#3a1047);border:1px solid var(--gold);border-radius:6px;position:relative;animation:min .5s cubic-bezier(.2,.8,.3,1.1);box-shadow:0 40px 100px rgba(0,0,0,.65),0 0 60px rgba(212,165,116,.2)}
+.modal-card::before{content:'';position:absolute;inset:7px;border:1px solid rgba(212,165,116,.22);border-radius:3px;pointer-events:none}
+@keyframes min{from{transform:scale(.6) translateY(30px);opacity:0}to{transform:scale(1);opacity:1}}
+.morn{font-size:22px;letter-spacing:.5em;color:var(--goldD);margin-bottom:14px;padding-left:.5em}
+.mlbl{font-size:10px;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}
+.micon{font-size:50px;margin-bottom:14px}
+.mtxt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.7;color:var(--cream)}
+.mclose{margin-top:30px;padding:12px 28px;border:1px solid var(--goldD);color:var(--goldB);background:transparent;font-size:10px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Inter',sans-serif;transition:all .3s}
+.mclose:active{background:var(--gold);color:var(--ink)}
+
+/* SCROLL REVEAL */
+.sv{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease}
+.sv.revealed{opacity:1;transform:translateY(0)}
+
+@media(max-width:360px){
+  .h-name{font-size:58px}
+  .h-hbd{font-size:50px}
+  .rev-name{font-size:60px}
+  .cnt-num{font-size:170px}
+  .cake-wrap{width:270px}
+  .cl1{width:220px}.cl2{width:172px}.cl3{width:126px}
+  .cf1{width:220px}.cf2{width:172px}.cf3{width:126px}
+  .cplate{width:248px}
+  .candles-wrap{width:116px}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- CANVASES -->
+<canvas id="cfCanvas"></canvas>
+<canvas id="fwCanvas"></canvas>
+
+<!-- AMBIENT -->
+<div id="bgStars"></div>
+<div id="bgPetals"></div>
+<div id="bgLanterns"></div>
+
+<!-- MUSIC -->
+<button id="musicBtn" title="Music on/off">♪</button>
+
+<!-- ══ PHASE: LOADING ══ -->
+<div class="phase on" id="pLoad">
+  <div class="load-star">✦</div>
+  <div class="load-bar"><div class="load-prog" id="ldProg"></div></div>
+  <div class="load-txt">Aap ka surprise tayyar ho raha hai…</div>
+</div>
+
+<!-- ══ PHASE: ENVELOPE ══ -->
+<div class="phase" id="pEnv">
+  <div class="env-wrap" id="envWrap" role="button" tabindex="0">
+    <div class="env-box">
+      <!-- To -->
+      <div class="env-to">
+        <div class="env-to-lbl">To</div>
+        <div class="env-to-name">Miss Mano ✦</div>
+      </div>
+      <!-- Flap & Seal -->
+      <div class="env-flap"></div>
+      <div class="env-seal">M</div>
+      <!-- From -->
+      <div class="env-from">
+        <div class="env-from-lbl">From</div>
+        <div class="env-from-name">Ahmad Hassan</div>
+      </div>
+    </div>
+  </div>
+  <div class="env-hbd">Happy Birthday!</div>
+  <div class="env-sub">Ahmad Hassan ki taraf se ❤</div>
+  <div class="env-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--cream);opacity:.75;margin-top:8px">Miss Mano ke liye ek khaas surprise…</div>
+  <div class="env-tap">✦ Tap to Open ✦</div>
+</div>
+
+<!-- ══ PHASE: COUNTDOWN ══ -->
+<div class="phase" id="pCount">
+  <div style="position:relative;display:flex;align-items:center;justify-content:center" id="cntBox"></div>
+</div>
+
+<!-- ══ PHASE: REVEAL ══ -->
+<div class="phase" id="pReveal">
+  <div class="rev-box">
+    <div class="rev-e">✦ Ahmad Hassan presents ✦</div>
+    <div class="rev-hbd">Happy Birthday</div>
+    <div class="rev-name">Miss Mano</div>
+    <div class="rev-div"><span class="rl"></span><span class="ro">✦</span><span class="rl"></span></div>
+    <div class="rev-from">Ahmad Hassan ki taraf se ❤</div>
+    <div class="rev-msg">Aap woh noor hain jo har jagah roshni bikherta hai — aaj ka yeh din sirf aur sirf aap ka hai.</div>
+    <button class="rev-btn" id="revBtn">✦ Surprise Dekhen ✦</button>
+  </div>
+</div>
+
+<!-- ══ MAIN PAGE ══ -->
+<div id="pMain">
+  <div class="main-wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="h-eye">✦ Ahmad Hassan presents ✦</div>
+      <div class="h-hbd">Happy Birthday</div>
+      <div class="h-name">Miss Mano</div>
+      <div class="h-divl"><span class="rl"></span><span class="ro">✦</span><span class="rl"></span></div>
+      <div class="h-quote">"Kuch log zindagi mein nahi, naseeb mein aate hain — Miss Mano, aap unhi mein se ek hain."</div>
+      <div class="h-from">— Ahmad Hassan ❤</div>
+      <div class="h-badges">
+        <span class="badge">✦ Allah ka tohfa</span>
+        <span class="badge">✦ Ahmad Hassan ki best dost</span>
+        <span class="badge">✦ Pure heart</span>
+      </div>
+      <div class="h-scroll"><span>Neeche Aayein</span><div class="arr">↓</div></div>
+    </section>
+
+    <!-- CAKE -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Aap ke liye Khaas Cake ✦</span><span class="rl"></span></div>
+    <div class="cake-area sv">
+      <div class="cake-stage">
+        <div class="cake-wrap" id="cakeWrap">
+          <div class="cake-glow" id="cakeGlow"></div>
+          <!-- Candles -->
+          <div class="candles-wrap">
+            <div class="candle" data-i="0"><div class="flame"></div></div>
+            <div class="candle" data-i="1"><div class="flame"></div></div>
+            <div class="candle" data-i="2"><div class="flame"></div></div>
+            <div class="candle" data-i="3"><div class="flame"></div></div>
+            <div class="candle" data-i="4"><div class="flame"></div></div>
+          </div>
+          <!-- Cake layers (bottom to top order in DOM but positioned absolutely) -->
+          <div class="cl cl3"></div>
+          <div class="cf cf3"></div>
+          <div class="cl cl2"></div>
+          <div class="cf cf2"></div>
+          <div class="cdots" style="width:180px;bottom:96px"><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span></div>
+          <div class="cl cl1"></div>
+          <div class="cf cf1"></div>
+          <div class="cdots" style="width:224px;bottom:34px"><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span></div>
+          <div class="cplate"></div>
+        </div>
+      </div>
+      <div class="cake-hint" id="cakeHint">✦ Har mombatti tap karein aur ek khaas wish maangein ✦</div>
+      <div class="cake-wish" id="cakeWish">
+        <div class="cwl">Miss Mano ki Wish Qubool Ho</div>
+        <div class="cwt">Allah Ta'ala Miss Mano ki har ek wish qubool farmaye, har dua sun le, aur unhe woh khushiyan ata farmaye jinki woh haqdaar hain. Ahmad Hassan ki taraf se dil ki gehrayi se dua. Ameen 🤍</div>
+      </div>
+    </div>
+
+    <!-- REASONS -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Miss Mano Kyun Khaas Hain ✦</span><span class="rl"></span></div>
+    <div class="sv">
+      <div class="reasons-outer">
+        <div class="reasons-track" id="rTrack">
+          <div class="rcard"><div class="ricon">🌟</div><div class="rnum">01</div><div class="rtitle">Aap ka Noor Khaas Hai</div><div class="rbody">Miss Mano, aap ki aankhon mein duniya bhar ka noor hai — jab aap muskurati hain, gham ki parchhayi bhi dur ho jaati hai.</div></div>
+          <div class="rcard"><div class="ricon">💫</div><div class="rnum">02</div><div class="rtitle">Dil Bilkul Saaf Hai</div><div class="rbody">Itna saaf dil bahut kam logon ko naseeb hota hai. Aap ka khayaal, aap ki mohabbat — dono Allah ki khaas naimat hain.</div></div>
+          <div class="rcard"><div class="ricon">🌸</div><div class="rnum">03</div><div class="rtitle">Aap ki Dosti Anmol Hai</div><div class="rbody">Ahmad Hassan ke liye aap jaisi dost milna Allah ki khaas rehmat hai — aap ke saath har waqt khaas lagta hai.</div></div>
+          <div class="rcard"><div class="ricon">✨</div><div class="rnum">04</div><div class="rtitle">Aap Allah ki Naimat Hain</div><div class="rbody">Aap jaisi dost milna kismat ki baat nahi — yeh Allah ki khaas meherbani hai. Main hamesha shukrguzaar rahun ga.</div></div>
+          <div class="rcard"><div class="ricon">🌺</div><div class="rnum">05</div><div class="rtitle">Aap Duniya Se Alag Hain</div><div class="rbody">Duniya ke log aate jaate hain, lekin aap woh hain jo dil mein rehte hain. Aap ki jagah hamesha sab se special hai.</div></div>
+          <div class="rcard"><div class="ricon">🤍</div><div class="rnum">06</div><div class="rtitle">Aap ki Hansi Dawa Hai</div><div class="rbody">Aap ki hansi sunne se dil ka bojh halka ho jaata hai. Allah ne aap mein woh cheez rakhi hai jo rare hai — pure joy.</div></div>
+          <div class="rcard"><div class="ricon">⭐</div><div class="rnum">07</div><div class="rtitle">Aap Deserve Karti Hain</div><div class="rbody">Duniya ki har khoobsoorat cheez Miss Mano ke qadmon mein honi chahiye — khushiyan, barkat, sukoon aur Allah ki rehmat.</div></div>
+          <div class="rcard"><div class="ricon">🌙</div><div class="rnum">08</div><div class="rtitle">Hamesha Aisi Raho</div><div class="rbody">In sha Allah hamesha — Ahmad Hassan ki dua hai ke Miss Mano hamesha khush rahein, aur Allah unhe apni rehmat mein rakhe. Ameen.</div></div>
+        </div>
+      </div>
+      <div class="rdots" id="rdots"></div>
+      <div class="swipehint">← Swipe karain →</div>
+    </div>
+
+    <!-- GIFTS -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Ahmad Hassan ke Tohfay ✦</span><span class="rl"></span></div>
+    <div class="gifts-sub sv">Har dabba kholo — Ahmad Hassan ne Miss Mano ke liye kuch khaas chhupaaya hai ✦</div>
+    <div class="gifts-grid sv" id="giftsGrid"></div>
+
+    <!-- BALLOONS -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Balloon Garden ✦</span><span class="rl"></span></div>
+    <div class="balloon-sec sv">
+      <div class="balloon-hdr">
+        <div class="bh1">Rang birangi duniya Miss Mano ke liye</div>
+        <div class="bh2">Koi bhi balloon tap karein — andar kuch khaas hai ✦</div>
+      </div>
+      <div class="balloon-field" id="bField"></div>
+    </div>
+
+    <!-- SHAYARI -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Dil Ki Baat ✦</span><span class="rl"></span></div>
+    <div class="shayari-list sv">
+      <div class="shcard"><div class="shlang">Urdu Shayari</div><div class="shtext">Woh dost jo aankhon se dekhe bin samjhe<br>Woh dost jo khushi mein bhi, gham mein bhi mile<br>Aisi dosti Allah ki khaas naimat hai<br>Ahmad Hassan ki dua — Miss Mano hamesha aabad rahe</div><div class="shattr">— Ahmad Hassan</div></div>
+      <div class="shcard"><div class="shlang">Birthday Wish</div><div class="shtext">Is naye saal mein har manzil aasaan ho teri<br>Har subha khushiyon ki sher ho teri<br>Chand sitare tere qadam choomein<br>Allah ki rehmat ka saaya ho sar par tera</div><div class="shattr">— Ahmad Hassan, Miss Mano ke liye</div></div>
+      <div class="shcard"><div class="shlang">English Poetry</div><div class="shtext">In the quiet of a thousand stars<br>Ahmad thanks the sky for who you are —<br>Miss Mano, whose heart is pure as dawn<br>Whose kindness and grace will never be gone</div><div class="shattr">— For Miss Mano, from Ahmad Hassan</div></div>
+      <div class="shcard"><div class="shlang">Dua Shayari</div><div class="shtext">Allah Miss Mano ke naam ka noor barqarar rakhe<br>Inhe har gham se hamesha door rakhe<br>Jannat ki hawayein inki raah mein bikhar jayein<br>Ahmad Hassan ki dua — aap hamesha aabad rahein</div><div class="shattr">— Ameen, dil se</div></div>
+    </div>
+
+    <!-- WISHING STARS -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Sitaaron ki Duaen ✦</span><span class="rl"></span></div>
+    <div class="stars-sec sv">
+      <div class="stars-intro">Miss Mano, koi bhi sitara click karein — Ahmad Hassan ne har sitare mein ek khaas dua rakhi hai ✦</div>
+      <div class="stars-grid" id="sGrid"></div>
+      <div class="wish-box empty" id="wishBox">Ek sitara chunein…</div>
+    </div>
+
+    <!-- DUAS -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Allah Se Dua ✦</span><span class="rl"></span></div>
+    <div class="sv">
+      <div class="dua-card">
+        <div class="dua-orn">✦ ✦ ✦</div>
+        <div class="dua-lbl">Ahmad Hassan ki Miss Mano ke liye Dua</div>
+        <div class="dua-txt" id="duaTxt">Allah Ta'ala Miss Mano ki zindagi ko noor se bhar de, har raaste ko aasaan kare, aur unhe har gham se mehfooz rakhe. Ameen.</div>
+        <div class="dua-row"><button class="dua-btn" id="duaBtn">Aur Ek Dua ✦</button></div>
+        <div class="dua-cnt" id="duaCnt">1 / 9</div>
+      </div>
+    </div>
+
+    <!-- LETTER -->
+    <div class="sdiv sv"><span class="rl"></span><span class="lbl">✦ Ahmad Hassan ki Khat ✦</span><span class="rl"></span></div>
+    <div class="letter sv">
+      <div class="ltop">Ahmad Hassan ki taraf se — Miss Mano ke liye dil se</div>
+      <div class="lscript">My dearest Miss Mano,</div>
+      <div class="lbody">
+        Aap jaisi dost milna sach mein Allah ki rehmat hai. Zindagi mein log milte hain, baatein hoti hain, waqt guzarta hai — lekin kuch log aise hote hain jo dil mein ghhar kar lete hain. Miss Mano, aap unhi mein se ek hain.<br><br>
+        Aap ki hansi mein woh cheez hai jo duniya kharidna chahti hai lekin khariid nahi sakti. Aap ka dil itna saaf hai ke log iske paas aate hain toh khud ko behtar mehsoos karte hain.<br><br>
+        Aaj aap ka din hai — duniya ka sab se khaas din. Ahmad Hassan dua karta hai ke Allah aap ko woh sab de jo aap deserve karti hain, aur us se bhi zyada. Aap ki khushiyan hamesha aabad rahein, aap ki duayen hamesha qubool hon. Mujhe hamesha yaad rahein gi aap. 🤍
+      </div>
+      <div class="lsign">Ahmad Hassan ❤</div>
+      <div class="lseal">A</div>
+    </div>
+
+    <!-- FINALE -->
+    <div class="sdiv sv" style="margin-top:70px"><span class="rl"></span><span class="lbl">✦ ✦ ✦</span><span class="rl"></span></div>
+    <div class="finale sv">
+      <div class="fin-script">Happy Birthday!</div>
+      <div class="fin-from">— Ahmad Hassan ❤</div>
+      <div class="fin-txt">Allah Miss Mano ko duniya o akhirat dono mein kamyab aur khush rakhe — aaj bhi, hamesha bhi. Ameen 🤍</div>
+      <button class="fin-btn" id="finBtn">✦ Aatishbazi Shuru Karen ✦</button>
+      <div class="fin-orn">✦  ✦  ✦</div>
+    </div>
+
+    <div class="pg-footer">Ahmad Hassan ki taraf se — Miss Mano ke liye — dil se ❤</div>
+  </div>
+</div>
+
+<!-- GIFT MODAL -->
+<div class="modal-bg" id="gModal">
+  <div class="modal-card">
+    <div class="morn">✦ ✦ ✦</div>
+    <div class="mlbl" id="mLbl">Miss Mano ka Tohfa</div>
+    <div class="micon" id="mIcon">🎁</div>
+    <div class="mtxt" id="mTxt"></div>
+    <button class="mclose" id="mClose">Shukriya ✦</button>
+  </div>
+</div>
+
+<script>
+// ── UTILS ──
+const q = s => document.querySelector(s);
+const qa = s => document.querySelectorAll(s);
+
+// ── CANVAS ──
+const cfc = q('#cfCanvas'), cfx = cfc.getContext('2d');
+const fwc = q('#fwCanvas'), fwx = fwc.getContext('2d');
+function szc(){ cfc.width=fwc.width=innerWidth; cfc.height=fwc.height=innerHeight; }
+szc(); addEventListener('resize', szc);
+
+// ── STARS ──
+for(let i=0;i<80;i++){
+  const s=document.createElement('div'); s.className='bstar';
+  const z=.4+Math.random()*2;
+  s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`;
+  q('#bgStars').appendChild(s);
+}
+
+// ── PETALS ──
+const pc=['#f4d4e0','#e8b4cb','#d4a574','#fef5e6','#c47fa8','#f0c896'];
+for(let i=0;i<18;i++){
+  const p=document.createElement('div'); p.className='petal';
+  const sz=4+Math.random()*10;
+  p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${pc[i%pc.length]};--d:${7+Math.random()*7}s;--dl:${Math.random()*9}s`;
+  q('#bgPetals').appendChild(p);
+}
+
+// ── LANTERNS ──
+function spawnLantern(){
+  const l=document.createElement('div'); l.className='lant';
+  l.style.cssText=`left:${5+Math.random()*88}%;--d:${13+Math.random()*7}s;--dl:0s;transform:scale(${.6+Math.random()*.7})`;
+  q('#bgLanterns').appendChild(l);
+  setTimeout(()=>l.remove(),22000);
+}
+spawnLantern(); spawnLantern();
+setInterval(spawnLantern,6000);
+
+// ── CONFETTI ──
+let cparts=[];
+const cc=['#d4a574','#f0c896','#e8b4cb','#f4d4e0','#fef5e6','#c47fa8','#9a6830'];
+function burst(x,y,n=80,str=14){
+  if(cparts.length>400) return; // cap to prevent hang
+  for(let i=0;i<n;i++){
+    const a=Math.PI*2*i/n+(Math.random()-.5)*.8;
+    const sp=1.5+Math.random()*str;
+    cparts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-sp*.4,g:.22+Math.random()*.1,r:2+Math.random()*4,c:cc[Math.floor(Math.random()*cc.length)],rot:Math.random()*360,vr:(Math.random()-.5)*.6,life:1,dec:.01+Math.random()*.012,sq:Math.random()>.5});
+  }
+}
+function cfTick(){
+  cfx.clearRect(0,0,cfc.width,cfc.height);
+  cparts.forEach(p=>{
+    p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life-=p.dec;
+    cfx.save();cfx.translate(p.x,p.y);cfx.rotate(p.rot*Math.PI/180);
+    cfx.fillStyle=p.c;cfx.globalAlpha=Math.max(0,p.life);
+    if(p.sq){cfx.fillRect(-p.r,-p.r/2,p.r*2,p.r)}else{cfx.beginPath();cfx.arc(0,0,p.r,0,Math.PI*2);cfx.fill()}
+    cfx.restore();
+  });
+  cparts=cparts.filter(p=>p.life>0&&p.y<cfc.height+60);
+  requestAnimationFrame(cfTick);
+}
+cfTick();
+
+// ── FIREWORKS ──
+let fparts=[],fwon=false,fwtimer=null,fwraf=null;
+function fwburst(x,y){
+  if(fparts.length>300) return; // cap particles to prevent hang
+  const col=cc[Math.floor(Math.random()*cc.length)];
+  for(let i=0;i<35;i++){
+    const a=Math.PI*2*i/35+(Math.random()-.5)*.3;
+    const sp=2+Math.random()*5;
+    fparts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,dec:.012+Math.random()*.01,c:col,r:1.5+Math.random()*2});
+  }
+}
+function fwTick(){
+  fwx.fillStyle='rgba(13,7,32,.18)';fwx.fillRect(0,0,fwc.width,fwc.height);
+  for(let i=0;i<fparts.length;i++){
+    const p=fparts[i];
+    p.vy+=.05;p.x+=p.vx;p.y+=p.vy;p.life-=p.dec;
+    if(p.life<=0) continue;
+    fwx.globalAlpha=p.life;fwx.fillStyle=p.c;
+    fwx.beginPath();fwx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);fwx.fill();
+  }
+  fwx.globalAlpha=1;
+  fparts=fparts.filter(p=>p.life>0);
+  if(fwon) fwraf=requestAnimationFrame(fwTick);
+  else{fwx.clearRect(0,0,fwc.width,fwc.height);}
+}
+function startFW(){
+  if(fwon) return;
+  fwon=true; fwTick();
+  let ct=0;
+  fwtimer=setInterval(()=>{
+    fwburst(fwc.width*(.15+Math.random()*.7),fwc.height*(.08+Math.random()*.45));
+    ct++;
+    if(ct>18){clearInterval(fwtimer);setTimeout(()=>{fwon=false;fparts=[];},1500);}
+  },500);
+}
+
+// ── SPARKLE ──
+const syms=['✦','✧','⋆','·'];
+let lspark=0;
+function spark(x,y){
+  if(Date.now()-lspark<55) return; lspark=Date.now();
+  const el=document.createElement('div'); el.className='sparkle';
+  const sz=12+Math.random()*14;
+  el.style.cssText=`left:${x-sz/2}px;top:${y-sz/2}px;font-size:${sz}px;color:${cc[Math.floor(Math.random()*cc.length)]}`;
+  el.textContent=syms[Math.floor(Math.random()*syms.length)];
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),700);
+}
+addEventListener('mousemove',e=>spark(e.clientX,e.clientY));
+addEventListener('touchmove',e=>{const t=e.touches[0];spark(t.clientX,t.clientY);},{passive:true});
+
+// ── AUDIO ──
+let actx=null;
+function initA(){if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();}
+function chime(f,d,type='triangle',v=.08){
+  try{
+    initA();
+    const o=actx.createOscillator(),g=actx.createGain(),now=actx.currentTime;
+    o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(v,now+.015);
+    g.gain.exponentialRampToValueAtTime(.0001,now+d);
+    o.connect(g);g.connect(actx.destination);o.start(now);o.stop(now+d+.05);
+  }catch(e){}
+}
+function puff(){
+  try{
+    initA();
+    const buf=actx.createBuffer(1,actx.sampleRate*.18,actx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,1.8)*.25;
+    const s=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();
+    f.type='lowpass';f.frequency.value=700;g.gain.value=.45;
+    s.buffer=buf;s.connect(f);f.connect(g);g.connect(actx.destination);s.start();
+  }catch(e){}
+}
+function pop(){
+  try{
+    initA();
+    const buf=actx.createBuffer(1,actx.sampleRate*.07,actx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3)*.7;
+    const s=actx.createBufferSource(),g=actx.createGain();
+    g.gain.value=.8;s.buffer=buf;s.connect(g);g.connect(actx.destination);s.start();
+  }catch(e){}
+}
+
+// ── MUSIC BOX ──
+class MB{
+  constructor(){
+    this.ctx=null;this.on=false;this.ni=0;this.t=null;
+    const N={C4:261,D4:293,E4:329,F4:349,G4:392,A4:440,B4:493,C5:523,D5:587,E5:659,F5:698,G5:784,A5:880,B5:988,C6:1047};
+    const bpm=126,bd=60/bpm;
+    this.m=[
+      [N.G5,.5,.7],[N.E5,.5,.6],[N.G5,.5,.7],[N.A5,1,.8],
+      [N.G5,.5,.6],[N.E5,.5,.6],[N.D5,.5,.5],[N.C5,1,.7],[0,.5,0],
+      [N.E5,.5,.6],[N.G5,.5,.7],[N.A5,.5,.8],[N.C6,1,.85],
+      [N.A5,.5,.7],[N.G5,.5,.6],[N.E5,1,.6],[0,.5,0],
+      [N.D5,.5,.5],[N.E5,.5,.6],[N.G5,.5,.7],[N.E5,.5,.6],[N.C5,1,.7],
+      [N.A4,.5,.5],[N.C5,1.5,.65],[0,.5,0],
+      [N.C5,.5,.7],[N.E5,.5,.7],[N.G5,.5,.7],[N.A5,.5,.8],[N.G5,1,.7],
+      [N.E5,.5,.6],[N.D5,.5,.5],[N.C5,1.5,.75],[0,1,0],
+      [N.G5,.5,.7],[N.A5,.5,.8],[N.G5,.5,.7],[N.E5,.5,.6],[N.D5,.5,.5],[N.E5,1,.6],
+      [N.G5,.5,.7],[N.A5,.5,.8],[N.C6,.5,.85],[N.A5,.5,.7],[N.G5,1,.7],
+      [N.E5,.5,.6],[N.G5,.5,.7],[N.E5,.5,.6],[N.D5,.5,.5],[N.C5,2,.8],[0,1,0],
+    ].map(n=>[n[0],n[1]*bd,n[2]]);
+  }
+  init(){if(!this.ctx) this.ctx=new(window.AudioContext||window.webkitAudioContext)();}
+  note(f,dur,v){
+    if(!this.ctx||!f)return;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain(),now=this.ctx.currentTime;
+    o.type='triangle';o.frequency.value=f;
+    g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(v*.12,now+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,now+Math.min(dur*.85,.52));
+    o.connect(g);g.connect(this.ctx.destination);o.start(now);o.stop(now+dur+.04);
+  }
+  sched(){
+    if(!this.on) return;
+    const [f,d,v]=this.m[this.ni];
+    this.note(f,d,v);
+    this.ni=(this.ni+1)%this.m.length;
+    this.t=setTimeout(()=>this.sched(),d*1000);
+  }
+  start(){this.init();if(this.on)return;this.on=true;this.sched();}
+  stop(){this.on=false;clearTimeout(this.t);}
+  toggle(){if(this.on)this.stop();else this.start();return this.on;}
+}
+const mb=new MB();
+let mOn=false;
+q('#musicBtn').addEventListener('click',()=>{
+  mOn=mb.toggle();
+  q('#musicBtn').textContent=mOn?'♪':'♩';
+  q('#musicBtn').style.opacity=mOn?'1':'.6';
+});
+
+// ── PHASES ──
+function hideAll(){
+  qa('.phase').forEach(p=>p.classList.remove('on'));
+  q('#pMain').classList.remove('on');
+}
+function show(id){
+  hideAll();
+  const el=q('#'+id);
+  if(el){el.classList.add('on');}
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showMain(){
+  hideAll();
+  q('#pMain').classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+  initSV();
+  buildBalloons();
+}
+show('pLoad');
+
+// ── LOADING ──
+let pr=0;
+const ld=q('#ldProg');
+const li=setInterval(()=>{
+  pr+=1.5+Math.random()*2;
+  ld.style.width=Math.min(pr,97)+'%';
+  if(pr>=97){clearInterval(li);setTimeout(()=>{show('pEnv');},600);}
+},50);
+
+// ── ENVELOPE ──
+function openEnv(){
+  chime(523,.4,'sine',.06);
+  q('#envWrap').style.pointerEvents='none';
+  setTimeout(()=>{show('pCount');countdown();},500);
+}
+q('#envWrap').addEventListener('click',openEnv);
+q('#envWrap').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openEnv();}});
+
+// ── COUNTDOWN ──
+function countdown(){
+  const box=q('#cntBox');
+  const nums=['3','2','1'];
+  let i=0;
+  function next(){
+    box.innerHTML='';
+    if(i>=nums.length){reveal();return;}
+    chime(380+i*100,.3,'triangle',.09);
+    const r=document.createElement('div');r.className='cnt-ring';
+    const n=document.createElement('div');n.className='cnt-num';n.textContent=nums[i];
+    box.appendChild(r);box.appendChild(n);
+    i++;setTimeout(next,1000);
+  }
+  next();
+}
+function reveal(){
+  show('pReveal');
+  setTimeout(()=>{
+    burst(innerWidth/2,innerHeight*.32,160,20);
+    chime(659,.5,'triangle',.08);
+    setTimeout(()=>chime(784,.5,'triangle',.08),180);
+    setTimeout(()=>chime(988,.6,'triangle',.08),360);
+    setTimeout(()=>chime(1319,.7,'triangle',.08),540);
+  },200);
+  setTimeout(()=>burst(innerWidth*.12,innerHeight*.4,60,15),900);
+  setTimeout(()=>burst(innerWidth*.88,innerHeight*.4,60,15),1300);
+}
+q('#revBtn').addEventListener('click',()=>{
+  chime(659,.3,'sine',.06);
+  if(!mOn){mb.start();mOn=true;q('#musicBtn').textContent='♪';q('#musicBtn').style.opacity='1';}
+  showMain();
+});
+
+// ── CANDLES ──
+const candles=qa('.candle');
+let blown=0;
+candles.forEach(c=>{
+  c.addEventListener('click',()=>{
+    if(c.classList.contains('out'))return;
+    c.classList.add('out');puff();blown++;
+    const r=c.getBoundingClientRect();
+    burst(r.left+r.width/2,r.top+r.height/2,20,8);
+    chime(780+blown*45,.28,'sine',.06);
+    if(blown===candles.length){
+      setTimeout(()=>{
+        q('#cakeGlow').style.opacity='1';
+        q('#cakeWish').classList.add('show');
+        q('#cakeHint').textContent='✦ MashaAllah! Miss Mano ki wish qubool — Ahmad Hassan ki taraf se ✦';
+        burst(innerWidth/2,innerHeight*.48,80,14);
+        startFW();
+        chime(523,.4,'sine',.07);setTimeout(()=>chime(659,.4,'sine',.07),150);
+        setTimeout(()=>chime(784,.5,'sine',.07),300);setTimeout(()=>chime(1047,.7,'sine',.07),450);
+      },400);
+    }
+  });
+});
+q('#cakeWrap').addEventListener('dblclick',()=>{
+  candles.forEach(c=>c.classList.remove('out'));
+  blown=0;
+  q('#cakeGlow').style.opacity='0';
+  q('#cakeWish').classList.remove('show');
+  q('#cakeHint').textContent='✦ Har mombatti tap karein aur ek khaas wish maangein ✦';
+});
+
+// ── REASONS DOTS ──
+const rt=q('#rTrack'),rdc=q('#rdots');
+const rcards=rt.querySelectorAll('.rcard');
+rcards.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='rdot'+(i===0?' on':'');
+  rdc.appendChild(d);
+});
+rt.addEventListener('scroll',()=>{
+  const idx=Math.round(rt.scrollLeft/(rt.scrollWidth/rcards.length));
+  rdc.querySelectorAll('.rdot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+},{passive:true});
+
+// ── GIFTS ──
+const gifts=[
+  {i:'🌟',l:'Tohfa 01 — Sehat',t:"Allah Miss Mano ko kamil sehat ata farmaye — jism bhi, rooh bhi, dil bhi. Ahmad Hassan ki dua hai ke zindagi ka har din taza aur khoobsoorat ho. Ameen."},
+  {i:'✨',l:'Tohfa 02 — Kamyabi',t:"Allah Miss Mano ki mehnat ko rang de, manzil aasaan kare, aur unhe woh mukaam de jo woh deserve karti hain. Duniya o akhirat dono mein. Ameen."},
+  {i:'🌸',l:'Tohfa 03 — Khushiyan',t:"Miss Mano ki zindagi mein khushiyon ka woh dariya ho jo kabhi nahi rukta. Har subha nai umeed le aaye, Ahmad Hassan ki dua hamesha aap ke saath hai."},
+  {i:'🤍',l:'Tohfa 04 — Dosti',t:"Ahmad Hassan ke liye Miss Mano jaisi dost milna Allah ki khaas rehmat hai. In sha Allah yeh dosti hamesha qaim rahe. Ameen."},
+  {i:'🌺',l:'Tohfa 05 — Barakat',t:"Allah Miss Mano ko duniya ki har khoobsoorat cheez se nawaze — mohabbat, barakat, sukoon, aur woh sab jo unhon ne kabhi maanga. Har dua qubool ho."},
+  {i:'💫',l:'Tohfa 06 — Noor',t:"Allah Miss Mano ke chehre ka noor kabhi kam na kare, muskaan hamesha aabaad rakhe, aur dil ki roshni hamesha jhalakti rahe."},
+  {i:'🌙',l:'Tohfa 07 — Akhirat',t:"Allah Miss Mano ko jannat-ul-firdous naseeb kare, walidain ka saaya salamat rakhe, aur apni rehmat ke saaye mein rakhe. Ameen ya Rabb."},
+  {i:'⭐',l:'Tohfa 08 — Hosla',t:"Jab bhi zindagi mushkil lage, yaad rahe ke Miss Mano us se zyada mazboot hain. Allah ne aap mein woh taqat rakhi hai jo har mushkil aasaan kar sake."},
+  {i:'🌹',l:'Tohfa 09 — Ahmad Se',t:"Ahmad Hassan ki taraf se — Miss Mano aap ki yaadein aur aap ka saath hamesha qeemti raha hai. Allah aap ko hamesha khush rakhe. Hamesha yaad rahein gi aap. 🤍"},
+];
+const gg=q('#giftsGrid');
+gifts.forEach((g,i)=>{
+  const el=document.createElement('div');el.className='gbox';
+  el.innerHTML=`<div class="gribbon"></div><div class="gnum">${String(i+1).padStart(2,'0')}</div><div class="gicon">${g.i}</div><div class="glbl">Kholein</div>`;
+  el.addEventListener('click',()=>{
+    if(el.classList.contains('opened'))return;
+    el.classList.add('opened');
+    const r=el.getBoundingClientRect();
+    burst(r.left+r.width/2,r.top+r.height/2,40,12);
+    chime(784,.25,'sine',.07);setTimeout(()=>chime(988,.3,'sine',.06),100);
+    q('#mLbl').textContent=g.l;q('#mIcon').textContent=g.i;q('#mTxt').textContent=g.t;
+    q('#gModal').classList.add('open');
+  });
+  gg.appendChild(el);
+});
+q('#mClose').addEventListener('click',()=>q('#gModal').classList.remove('open'));
+q('#gModal').addEventListener('click',e=>{if(e.target===q('#gModal'))q('#gModal').classList.remove('open');});
+
+// ── BALLOONS ──
+const bcolors=['#e8b4cb','#d4a574','#f4d4e0','#c47fa8','#f0c896','#a05b8e','#fef5e6','#9a6830'];
+const bmsgs=['Miss Mano khaas hain ✦','Ahmad Hassan ki dua ❤','Allah aap ko khush rakhe','MashaAllah ✦','Aap ka noor chamke','Khushiyan aap ke naam','Stay blessed always ✦','Aap amazing hain ✦','Hamesha muskurati rahein','Dil se dua ❤'];
+function buildBalloons(){
+  const field=q('#bField');
+  if(field.children.length>0)return;
+  for(let i=0;i<10;i++){
+    const b=document.createElement('div');b.className='balloon';
+    const cl=bcolors[i%bcolors.length];
+    b.style.cssText=`left:${4+Math.random()*82}%;bottom:${Math.random()*30}px;background:radial-gradient(circle at 30% 30%,${cl} 0%,${cl}99 100%);color:${cl};--bd:${8+Math.random()*5}s;--bdl:${Math.random()*3.5}s`;
+    b.addEventListener('click',ev=>{
+      ev.stopPropagation();
+      const r=b.getBoundingClientRect();
+      burst(r.left+r.width/2,r.top+r.height/2,30,10);pop();
+      const msg=document.createElement('div');msg.className='bpop';
+      msg.style.cssText=`left:${r.left-20}px;top:${r.top}px`;
+      msg.textContent=bmsgs[Math.floor(Math.random()*bmsgs.length)];
+      document.body.appendChild(msg);setTimeout(()=>msg.remove(),2400);
+      b.style.transition='transform .12s';b.style.transform='scale(0)';
+      setTimeout(()=>{b.style.transform='';b.style.transition='';},3500);
+    });
+    field.appendChild(b);
+  }
+}
+
+// ── WISHING STARS ──
+const swishes=[
+  "Allah Miss Mano ki umr mein barkat de, har din khushiyon se bhara ho. Ahmad Hassan ki dua. Ameen 🌟",
+  "Miss Mano ki har mehnat rang laaye, har dua qubool ho, har subha nai umeed le aaye. ✨",
+  "Allah Miss Mano ko woh sab de jo unhon ne kabhi socha bhi nahi — is se bhi zyada khushiyan aur barkat. 🌸",
+  "Ahmad Hassan ki dua — Miss Mano hamesha khush rahein, Allah unhe apni rehmat ke saaye mein rakhe. 💫",
+  "Miss Mano ka noor hamesha chamakta rahe, dil hamesha saaf rahe, Allah ki rehmat hamesha saath rahe. 🌙",
+  "Is saal Miss Mano ki zindagi mein sirf khushiyan aayein, Allah har sapne ko sachcha kare. ⭐",
+  "Allah Miss Mano ko sehat, khushiyan, barkat aur jannat ata farmaye. Ahmad Hassan ki dua. Ameen. 🌺",
+];
+const sg=q('#sGrid');
+const sEm=['⭐','🌟','💫','✨','🌠','⭐','🌟'];
+let lastWish='';
+sEm.forEach((sym,i)=>{
+  const s=document.createElement('div');s.className='wstar';
+  s.style.cssText=`--sp:${2+Math.random()*2}s;--sdl:${i*.35}s`;
+  s.textContent=sym;
+  s.addEventListener('click',()=>{
+    if(s.classList.contains('wished'))return;
+    s.classList.add('wished');
+    chime(880+i*55,.4,'triangle',.07);
+    const r=s.getBoundingClientRect();
+    burst(r.left+r.width/2,r.top+r.height/2,25,10);
+    const wb=q('#wishBox');
+    wb.classList.remove('empty');
+    wb.style.opacity='0';
+    setTimeout(()=>{wb.textContent=swishes[i%swishes.length];wb.style.opacity='1';},300);
+  });
+  sg.appendChild(s);
+});
+
+// ── DUAS ──
+const duas=[
+  "Allah Ta'ala Miss Mano ki zindagi ko noor se bhar de, har raaste ko aasaan kare, aur unhe har gham se mehfooz rakhe. Ameen.",
+  "Allah Miss Mano ki har nek niyyat qubool farmaye, har koshish ko rang de, aur har sapne ko sachcha kare. Ameen.",
+  "Miss Mano par Allah ki rehmat ki barsat ho, har subha umeed ki ho, aur har raat sukoon ki. Zindagi noor se bhari rahe.",
+  "Allah Miss Mano ko aise log de jo inki qadar karein, aise mauqe jo inhe aage badhayein, aur aisi sehat jo hamesha qaim rahe.",
+  "Allah Miss Mano ko jannat-ul-firdous naseeb kare, walidain ka saaya salamat rakhe, aur apni rehmat mein rakhe. Ameen.",
+  "Miss Mano ki muskurahat Allah ki naimat hai. Allah is muskurahat ko hamesha salaamat rakhe. Ahmad Hassan ki dua.",
+  "Is naye saal mein Allah Miss Mano ko woh sab de jo unhon ne socha bhi nahi — barkat, khushiyan, mohabbat aur sukoon.",
+  "Allah Miss Mano ki umar daraz farmaye, sehat-e-kamil de, aur duniya o akhirat dono mein kamyab kare. Ameen ya Rabb.",
+  "Miss Mano par Allah ki rehmaton ka saaya hamesha rahe, har dua apne waqt par qubool ho. Ahmad Hassan ki taraf se Ameen.",
+];
+let di=0;
+const dtxt=q('#duaTxt'),dcnt=q('#duaCnt');
+q('#duaBtn').addEventListener('click',()=>{
+  di=(di+1)%duas.length;
+  dtxt.classList.add('fade');
+  chime(659,.3,'sine',.06);
+  setTimeout(()=>{dtxt.textContent=duas[di];dtxt.classList.remove('fade');dcnt.textContent=`${di+1} / ${duas.length}`;},380);
+});
+
+// ── FINALE ──
+q('#finBtn').addEventListener('click',()=>{
+  chime(523,.4,'sine',.07);
+  setTimeout(()=>chime(659,.4,'sine',.07),150);
+  setTimeout(()=>chime(784,.5,'sine',.07),300);
+  setTimeout(()=>chime(988,.6,'sine',.07),450);
+  setTimeout(()=>chime(1319,.8,'sine',.08),600);
+  startFW();
+  burst(innerWidth/2,innerHeight/2,100,18);
+  setTimeout(()=>burst(innerWidth*.1,innerHeight*.5,60,14),700);
+  setTimeout(()=>burst(innerWidth*.9,innerHeight*.5,60,14),1300);
+});
+
+// ── SCROLL REVEAL ──
+function initSV(){
+  const els=qa('.sv');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');obs.unobserve(e.target);}});
+  },{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+  els.forEach(el=>obs.observe(el));
+}
+</script>
+</body>
+</html>
